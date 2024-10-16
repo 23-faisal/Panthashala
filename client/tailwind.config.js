@@ -11,6 +11,9 @@ module.exports = {
         xl: "1280px",
         "2xl": "1536px",
       },
+      fontFamily: {
+        sans: ["Poppins", "sans-serif"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
