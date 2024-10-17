@@ -2,9 +2,9 @@ import React from "react";
 
 const SignUpPage = () => {
   return (
-    <div>
-      <h1>Welcome to the SignUpPage</h1>
-    </div>
+    <section className="max-w-6xl mx-auto px-4 flex items-center justify-center">
+      <h1>Sign up</h1>
+    </section>
   );
 };
 
