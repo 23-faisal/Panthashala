@@ -4,10 +4,11 @@ import ProfilePage from "./pages/ProfilePage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import OffersPage from "./pages/OffersPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+
 import PageNotFoundPage from "./pages/PageNotFoundPage";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
