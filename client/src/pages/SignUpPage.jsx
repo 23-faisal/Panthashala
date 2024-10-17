@@ -128,7 +128,7 @@ const SignUpPage = () => {
               className="w-full uppercase bg-blue-600 hover:bg-blue-700 active:bg-blue-800 "
               type="submit"
             >
-              Sign In
+              Sign Up
             </Button>
           </form>
           <Separator className="my-6" />
