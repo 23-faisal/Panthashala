@@ -1,7 +1,8 @@
 import { Input } from "@/components/ui/input";
-import { auth } from "@/config/firebase";
+import { auth, db } from "@/config/firebase";
 import { userAuthStore } from "@/store/userStore";
-import { signOut as firebaseSignOut } from "firebase/auth";
+import { signOut as firebaseSignOut, updateProfile } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -10,13 +11,15 @@ import { toast } from "react-toastify";
 const ProfilePage = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-
-  const { user, logout } = userAuthStore();
+  const [loading, setLoading] = useState(false);
+  const { user, setUser, logout } = userAuthStore();
   const currentUser = user;
+
+  console.log(auth.currentUser);
+
   const {
     register,
     handleSubmit,
-
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -32,7 +35,36 @@ const ProfilePage = () => {
     navigate("/sign-in");
   };
 
-  const SubmitForm = () => {};
+  const SubmitForm = async (data) => {
+    const newUsername = data.username;
+
+    try {
+      setLoading(true);
+      // Update username in Firebase Authentication
+      await updateProfile(auth.currentUser, {
+        displayName: newUsername,
+      });
+
+      // Update user in Zustand store and local storage
+      const updatedUser = { ...currentUser, displayName: newUsername };
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      // Update Firestore document
+      const userDocRef = doc(db, "users", currentUser.uid); // Assuming uid is used as document ID
+      await updateDoc(userDocRef, {
+        displayName: newUsername,
+      });
+
+      toast.success("Username updated successfully!");
+    } catch (error) {
+      console.error("Error updating username:", error);
+      toast.error("Failed to update username.");
+    } finally {
+      setLoading(false);
+      setIsEditing(false);
+    }
+  };
 
   return (
     <section className="px-4 ">
@@ -42,9 +74,8 @@ const ProfilePage = () => {
         </h1>
         <div className="mt-6">
           <form
+            className="w-full sm:w-2/3 md:w-1/2 mx-auto"
             onSubmit={handleSubmit(SubmitForm)}
-            className="w-full sm:w-2/3 md:w-1/2   mx-auto "
-            action=""
           >
             <div className="mb-3">
               <Input
@@ -52,7 +83,7 @@ const ProfilePage = () => {
                 placeholder="Username"
                 {...register("username", { required: "Username is required" })}
                 readOnly={!isEditing}
-                className={isEditing ? "" : "bg-gray-200"}
+                className={isEditing ? " bg-red-100" : " bg-gray-200"}
               />
               {errors.username && (
                 <p className="text-red-500 text-sm mt-1">
@@ -64,27 +95,23 @@ const ProfilePage = () => {
               <Input
                 type="email"
                 placeholder="Email"
-                {...register("email", { required: "Email is required" })}
+                value={currentUser.email}
                 readOnly
                 className="bg-gray-200"
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email.message}
-                </p>
-              )}
             </div>
 
             <div className="flex items-center flex-col sm:flex-row gap-2 sm:justify-between pt-2 ">
               <div className="flex items-center gap-1">
                 <p>Do you want to change the name?</p>
                 {isEditing ? (
-                  <p
+                  <button
+                    disabled={loading}
+                    type="submit"
                     className="cursor-pointer text-green-500"
-                    onClick={() => setIsEditing(false)}
                   >
-                    Save
-                  </p>
+                    Apply
+                  </button>
                 ) : (
                   <p
                     className="cursor-pointer text-blue-500"

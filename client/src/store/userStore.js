@@ -6,7 +6,12 @@ export const userAuthStore = create(
     (set) => ({
       user: JSON.parse(localStorage.getItem("user")) || null,
       loggedIn: !!localStorage.getItem("user"),
-      setUser: (user) => set({ user, loggedIn: !!user }),
+      setUser: (user) => {
+        set({ user, loggedIn: !!user });
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+      },
       logout: () => {
         localStorage.removeItem("user");
         set({ user: null, loggedIn: false });
