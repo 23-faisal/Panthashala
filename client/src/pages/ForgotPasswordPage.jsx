@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import ContinueWithGoogle from "@/components/common/ContinueWithGoogle";
+import { toast } from "react-toastify";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
@@ -19,9 +21,16 @@ const ForgotPasswordPage = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data) => {
+    const { email } = data;
+    try {
+      await sendPasswordResetEmail(auth, email);
+      reset();
+      toast.success("Email was send. Check your inbox.");
+      navigate("/sign-in");
+    } catch (error) {
+      toast.error("Count not send reset password", error.message);
+    }
   };
   return (
     <section className="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center">
@@ -59,7 +68,7 @@ const ForgotPasswordPage = () => {
 
             <div className="flex flex-col md:flex-row text-sm  md:justify-between items-center w-full  ">
               <p className="flex items-center gap-1">
-                <span>Don't have an account?</span>
+                <span>Don&apos;t have an account?</span>
                 <span
                   onClick={() => navigate("/sign-up")}
                   className="text-blue-500 cursor-pointer"
