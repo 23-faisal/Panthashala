@@ -2,10 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeClosed } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import ContinueWithGoogle from "@/components/common/ContinueWithGoogle";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "@/config/firebase";
+import { toast } from "react-toastify";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +17,7 @@ const SignUpPage = () => {
   const {
     register,
     handleSubmit,
-    reset,
+
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -23,9 +27,35 @@ const SignUpPage = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data) => {
+    const { username, email, password } = data;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      await updateProfile(auth.currentUser, {
+        displayName: username,
+      });
+
+      // Save the user to the firestore
+
+      await setDoc(doc(db, "users", user.uid), {
+        displayName: username,
+        email,
+        uid: user.uid,
+        photoURL: "",
+        createdAt: serverTimestamp(),
+      });
+      toast.success(`${username} signed up successfully!`);
+      navigate("/sign-in");
+    } catch (error) {
+      toast.error(`Sign-up failed: ${error.message}`);
+    }
   };
   return (
     <section className="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center">
