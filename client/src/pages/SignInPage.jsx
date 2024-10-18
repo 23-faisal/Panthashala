@@ -2,10 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeClosed } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import ContinueWithGoogle from "@/components/common/ContinueWithGoogle";
+import { toast } from "react-toastify";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +16,7 @@ const SignInPage = () => {
   const {
     register,
     handleSubmit,
-    reset,
+
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -22,9 +25,21 @@ const SignInPage = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data) => {
+    const { email, password } = data;
+    try {
+      const userCredentital = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredentital.user;
+      toast.success(`${user.displayName} logged in successfully`);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   return (
     <section className="max-w-6xl mx-auto px-4 flex flex-col items-center justify-center">
@@ -93,7 +108,7 @@ const SignInPage = () => {
             </div>
             <div className="flex flex-col md:flex-row text-sm  md:justify-between items-center w-full  ">
               <p className="flex items-center gap-1">
-                <span>Don't have an account?</span>
+                <span>Don&apos;t have an account?</span>
                 <span
                   onClick={() => navigate("/sign-up")}
                   className="text-blue-500 cursor-pointer"
