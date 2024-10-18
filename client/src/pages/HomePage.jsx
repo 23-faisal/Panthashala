@@ -1,12 +1,10 @@
-import { userAuthStore } from "@/store/userStore";
+import Spinner from "@/components/common/Spinner";
 
 const HomePage = () => {
-  const { user, loggedIn } = userAuthStore();
-  console.log(user);
-  console.log(loggedIn);
   return (
     <div>
       <h1> Welcome to the homepage</h1>
+     
     </div>
   );
 };

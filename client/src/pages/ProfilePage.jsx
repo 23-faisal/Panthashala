@@ -1,8 +1,10 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth, db } from "@/config/firebase";
 import { userAuthStore } from "@/store/userStore";
 import { signOut as firebaseSignOut, updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
+import { House } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -67,7 +69,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <section className="px-4 ">
+    <section className="px-4 mt-4">
       <div>
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mt-10 capitalize text-center">
           Profile
@@ -101,7 +103,7 @@ const ProfilePage = () => {
               />
             </div>
 
-            <div className="flex items-center flex-col sm:flex-row gap-2 sm:justify-between pt-2 ">
+            <div className="flex items-center flex-col  sm:flex-row gap-2 sm:justify-between pt-2 ">
               <div className="flex items-center gap-1">
                 <p>Do you want to change the name?</p>
                 {isEditing ? (
@@ -131,6 +133,19 @@ const ProfilePage = () => {
               </div>
             </div>
           </form>
+
+          {/* Sell or rent button */}
+          <div className="w-full sm:w-2/3 md:w-1/2 mx-auto mt-4">
+            <Button
+              onClick={() => navigate("/create-listing")}
+              className="flex items-center justify-center gap-2 w-full sm:py-6 sm:text-lg   bg-blue-600 shadow-md hover:bg-blue-700 hover:shadow-lg active:bg-blue-800 transition ease-in-out duration-75 text-md  "
+            >
+              <House className="w-6 h-6   " />
+              <span>Sell or Rent your room</span>
+            </Button>
+          </div>
+
+          {/*  */}
         </div>
       </div>
     </section>
