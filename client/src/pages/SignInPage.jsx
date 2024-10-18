@@ -9,8 +9,10 @@ import ContinueWithGoogle from "@/components/common/ContinueWithGoogle";
 import { toast } from "react-toastify";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebase";
+import { userAuthStore } from "@/store/userStore";
 
 const SignInPage = () => {
+  const { setUser } = userAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const {
@@ -28,13 +30,14 @@ const SignInPage = () => {
   const onSubmit = async (data) => {
     const { email, password } = data;
     try {
-      const userCredentital = await signInWithEmailAndPassword(
+      const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      const user = userCredentital.user;
+      const user = userCredential.user;
+      setUser(user);
       toast.success(`${user.displayName} logged in successfully`);
       navigate("/");
     } catch (error) {

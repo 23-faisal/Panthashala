@@ -5,9 +5,12 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { userAuthStore } from "@/store/userStore";
 
 const ContinueWithGoogle = () => {
   const navigate = useNavigate();
+  const { setUser } = userAuthStore();
+
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
 
@@ -23,6 +26,7 @@ const ContinueWithGoogle = () => {
         photoURL: user.photoURL,
         createdAt: serverTimestamp(),
       });
+      setUser(user);
       navigate("/");
       toast.success(`${user.displayName} logged in successfully`);
     } catch (error) {

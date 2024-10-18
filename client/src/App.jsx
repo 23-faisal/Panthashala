@@ -9,8 +9,11 @@ import PageNotFoundPage from "./pages/PageNotFoundPage";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import PrivateRoute from "./components/common/PrivateRoute";
+import { userAuthStore } from "./store/userStore";
 
 function App() {
+  const { loggedIn } = userAuthStore();
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar will always stay at the top */}
@@ -20,11 +23,19 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/sign-up" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/offer" element={<OffersPage />} />
+          <Route path="/offers" element={<OffersPage />} />
+
+          {/* Private route */}
+          <Route path="/profile" element={<PrivateRoute />}>
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+          {!loggedIn && (
+            <>
+              <Route path="/sign-in" element={<SignInPage />} />
+              <Route path="/sign-up" element={<SignUpPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            </>
+          )}
           <Route path="/*" element={<PageNotFoundPage />} />
         </Routes>
       </main>
