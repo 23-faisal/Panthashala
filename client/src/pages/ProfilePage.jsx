@@ -25,8 +25,8 @@ const ProfilePage = () => {
     },
   });
 
-  const signOut = () => {
-    firebaseSignOut(auth);
+  const signOut = async () => {
+    await firebaseSignOut(auth);
     logout();
     toast.success(`${currentUser.displayName} signed out successfully`);
     navigate("/sign-in");
