@@ -17,8 +17,6 @@ const ProfilePage = () => {
   const { user, setUser, logout } = userAuthStore();
   const currentUser = user;
 
-  console.log(auth.currentUser);
-
   const {
     register,
     handleSubmit,
@@ -65,6 +63,7 @@ const ProfilePage = () => {
     } finally {
       setLoading(false);
       setIsEditing(false);
+      navigate("/profile");
     }
   };
 
