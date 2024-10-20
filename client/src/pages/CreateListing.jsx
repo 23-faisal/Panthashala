@@ -5,11 +5,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { auth, db, storage } from "../config/firebase";
+import { db, storage } from "../config/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { userAuthStore } from "@/store/userStore";
 
 const CreateListing = () => {
+  const { user } = userAuthStore();
   const {
     register,
     handleSubmit,
@@ -43,12 +51,12 @@ const CreateListing = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const user = auth.currentUser;
       // Remove the images field from the data object
       const { images, ...listingData } = data;
 
       // Add the current user's UID to the listing data
       listingData.createdBy = user.uid;
+      listingData.createdAt = serverTimestamp();
 
       // Attempt to save listing data to Firestore without images
       const collectionRef = collection(db, "listings");

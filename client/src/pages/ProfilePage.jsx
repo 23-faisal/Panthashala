@@ -1,3 +1,4 @@
+import MyListing from "@/components/common/MyListing";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth, db } from "@/config/firebase";
@@ -142,6 +143,12 @@ const ProfilePage = () => {
               <House className="w-6 h-6   " />
               <span>Sell or Rent your room</span>
             </Button>
+          </div>
+
+          {/*  */}
+
+          <div className="mt-16  ">
+            <MyListing />
           </div>
 
           {/*  */}
