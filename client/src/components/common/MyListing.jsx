@@ -74,8 +74,6 @@ const MyListing = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  console.log(data);
-
   return (
     <div className="px-4 max-w-6xl mx-auto mb-10">
       <h1 className="text-center font-semibold text-2xl">My Listing</h1>
