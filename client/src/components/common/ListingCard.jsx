@@ -15,6 +15,7 @@ import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import EditListingDialog from "./EditListingDialog";
 
 // Function to calculate the difference in days from a given date to today
 const calculateDaysAgo = (timestamp) => {
@@ -34,6 +35,7 @@ const calculateDaysAgo = (timestamp) => {
 };
 const ListingCard = ({ listing, onDeleteSuccess }) => {
   const [open, setOpen] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false); // Manage the dialog state
 
   const deleteListingById = async (id) => {
     const docRef = doc(db, "listings", id);
@@ -87,7 +89,10 @@ const ListingCard = ({ listing, onDeleteSuccess }) => {
       </Link>
       <CardFooter>
         <div className="flex items-center justify-end gap-4">
-          <Button variant="outline">Edit</Button>
+          <Button variant="outline" onClick={() => setOpenEditDialog(true)}>
+            Edit
+          </Button>
+
           <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -115,8 +120,16 @@ const ListingCard = ({ listing, onDeleteSuccess }) => {
               </DialogContent>
             </Dialog>
           </div>
+          {/* Edit Listing Dialog */}
+          <EditListingDialog
+            listing={listing}
+            open={openEditDialog}
+            setOpen={setOpenEditDialog}
+            onEditSuccess={onDeleteSuccess} // Refetch data after successful edit
+          />
         </div>
       </CardFooter>
+      {/* Edit Listing Dialog */}
     </Card>
   );
 };

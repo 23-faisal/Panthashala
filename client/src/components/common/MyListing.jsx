@@ -3,9 +3,6 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import Spinner from "./Spinner";
 import { userAuthStore } from "@/store/userStore";
-import { Bath, Bed, MapPin } from "lucide-react";
-import { Card, CardContent, CardFooter } from "../ui/card";
-import { Button } from "../ui/button";
 import ListingCard from "./ListingCard";
 
 // Function to fetch data from Firestore filtered by createdBy UID
