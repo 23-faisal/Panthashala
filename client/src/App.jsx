@@ -12,6 +12,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { userAuthStore } from "./store/userStore";
 import CreateListing from "./pages/CreateListing";
+import HotelDetailsPage from "./pages/HotelDetailsPage";
 
 function App() {
   const { loggedIn } = userAuthStore();
@@ -25,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/offers" element={<OffersPage />} />
+          <Route path="/category/:id" element={<HotelDetailsPage />} />
 
           {/* Private route */}
           <Route path="/profile" element={<PrivateRoute />}>
