@@ -74,7 +74,7 @@ const HotelDetailsPage = () => {
       </div>
       <div className="mt-10">
         <p className="font-bold text-lg ">Facilities: </p>
-        <div className="flex gap-4 mt-2">
+        <div className="grid grid-cols-2 gap-4 mt-2 md:flex md:gap-4">
           <p className="flex items-center gap-2 text-primary font-extrabold">
             <Bed className="h-6 w-6 text-teal-500" />
             {listing.beds} Bed
