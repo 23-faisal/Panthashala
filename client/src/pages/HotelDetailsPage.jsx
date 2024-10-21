@@ -3,10 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
-import { Bath, Bed, MapPin } from "lucide-react";
+import { Bath, Bed, Forward, MapPin } from "lucide-react";
 import Spinner from "@/components/common/Spinner";
 
 import ImageSlider from "@/components/common/Slider";
+import { useState } from "react";
 
 const fetchListingById = async (id) => {
   const docRef = doc(db, "listings", id);
@@ -21,6 +22,7 @@ const fetchListingById = async (id) => {
 
 const HotelDetailsPage = () => {
   const { id } = useParams();
+  const [copyLink, setCopyLink] = useState(false);
 
   const {
     data: listing,
@@ -48,8 +50,23 @@ const HotelDetailsPage = () => {
         <MapPin className="text-green-500 h-6 w-6" />
         {listing.address}
       </p>
-      <div className="mt-4">
+      <div className="mt-4 relative">
         <ImageSlider images={listing.imgUrls} />
+        <div
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            setCopyLink(true);
+            setTimeout(() => {
+              setCopyLink(false);
+            }, 2000);
+          }}
+          className="bg-white cursor-pointer absolute top-5 right-5 rounded-full flex  items-center"
+        >
+          <Forward className="h-10 w-10  text-teal-500 font-extrabold " />
+        </div>
+        <div className="absolute top-8 right-8 0  ">
+          {copyLink && <p className="mt-10 text-slate-700 bg-slate-200 px-4 py-2 rounded-md ">Link Copied</p>}
+        </div>
       </div>
       <div className="mt-10">
         <p className="font-bold text-lg ">Facilities: </p>
