@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
-import { Bath, Bed, Forward, MapPin } from "lucide-react";
+import { Armchair, Bath, Bed, Car, Forward, MapPin } from "lucide-react";
 import Spinner from "@/components/common/Spinner";
 
 import ImageSlider from "@/components/common/Slider";
@@ -65,19 +65,33 @@ const HotelDetailsPage = () => {
           <Forward className="h-10 w-10  text-teal-500 font-extrabold " />
         </div>
         <div className="absolute top-8 right-8 0  ">
-          {copyLink && <p className="mt-10 text-slate-700 bg-slate-200 px-4 py-2 rounded-md ">Link Copied</p>}
+          {copyLink && (
+            <p className="mt-10 text-slate-700 bg-slate-200 px-4 py-2 rounded-md ">
+              Link Copied
+            </p>
+          )}
         </div>
       </div>
       <div className="mt-10">
         <p className="font-bold text-lg ">Facilities: </p>
         <div className="flex gap-4 mt-2">
-          <p className="flex items-center gap-2">
+          <p className="flex items-center gap-2 text-primary font-extrabold">
             <Bed className="h-6 w-6 text-teal-500" />
             {listing.beds} Bed
           </p>
-          <p className="flex items-center gap-2">
+          <p className="flex items-center gap-2 text-primary font-extrabold">
             <Bath className="h-6 w-6 text-teal-500" />
             {listing.baths} Bath
+          </p>
+
+          <p className="flex items-center gap-2 text-primary font-extrabold">
+            <Car className="h-6 w-6 text-teal-500" />
+            {listing.parking ? " Parking" : "No Parking"}
+          </p>
+
+          <p className="flex items-center gap-2 text-primary font-extrabold">
+            <Armchair className="h-6 w-6 text-teal-500" />
+            {listing.furnished ? " Furnished" : "Not Furnished"}
           </p>
         </div>
       </div>
