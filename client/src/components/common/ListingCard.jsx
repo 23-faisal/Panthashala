@@ -2,6 +2,19 @@ import { Bath, Bed, MapPin } from "lucide-react";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/config/firebase";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 // Function to calculate the difference in days from a given date to today
 const calculateDaysAgo = (timestamp) => {
@@ -19,11 +32,23 @@ const calculateDaysAgo = (timestamp) => {
     return `Today`;
   }
 };
-const ListingCard = ({ listing }) => {
-   
+const ListingCard = ({ listing, onDeleteSuccess }) => {
+  const [open, setOpen] = useState(false);
+
+  const deleteListingById = async (id) => {
+    const docRef = doc(db, "listings", id);
+    try {
+      await deleteDoc(docRef);
+      onDeleteSuccess(); // Notify parent component of successful deletion
+      setOpen(false); // Close the dialog after deletion
+      toast.success("Items deleted successfully");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
-    <Link to={`/category/${listing.id}`}>
-      <Card className="border shadow-md rounded-lg bg-slate-100 shadow-teal-50 hover:shadow-lg transition-all ease-in-out duration-150 hover:shadow-slate-300 ">
+    <Card className="border shadow-md rounded-lg bg-slate-100 shadow-teal-50 hover:shadow-lg transition-all ease-in-out duration-150 hover:shadow-slate-300 ">
+      <Link to={`/category/${listing.id}`}>
         <CardContent>
           <div className="mt-6 relative">
             <img
@@ -59,14 +84,40 @@ const ListingCard = ({ listing }) => {
           </div>
           <p className="mt-1">Price: ৳ {listing.regularPrice} / day</p>
         </CardContent>
-        <CardFooter>
-          <div className="flex items-center justify-end gap-4">
-            <Button variant="outline">Edit</Button>
-            <Button variant="destructive">Delete</Button>
+      </Link>
+      <CardFooter>
+        <div className="flex items-center justify-end gap-4">
+          <Button variant="outline">Edit</Button>
+          <div>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="destructive">Delete</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Are you want delete this?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    this post and remove your data from our servers.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => deleteListingById(listing.id)}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
-        </CardFooter>
-      </Card>
-    </Link>
+        </div>
+      </CardFooter>
+    </Card>
   );
 };
 

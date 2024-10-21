@@ -27,12 +27,10 @@ const fetchListings = async (userId) => {
   return listingsData;
 };
 
-
-
 const MyListing = () => {
   const { user } = userAuthStore(); // Get the current user from the store
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["myListings", user?.uid], // Use user UID as part of the query key
     queryFn: () => fetchListings(user?.uid), // Fetch listings for the current user
     placeholderData: keepPreviousData,
@@ -63,7 +61,7 @@ const MyListing = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {data.map((listing) => (
               <div key={listing.id}>
-                <ListingCard listing={listing} />
+                <ListingCard listing={listing} onDeleteSuccess={refetch} />
               </div>
             ))}
           </div>
