@@ -1,3 +1,4 @@
+import RecentOffer from "@/components/common/RecentOffer";
 import ImageSlider from "@/components/common/Slider";
 
 const images = [
@@ -17,6 +18,9 @@ const HomePage = () => {
   return (
     <div>
       <ImageSlider images={images} />
+      <div className="mt-16">
+        <RecentOffer />
+      </div>
     </div>
   );
 };
